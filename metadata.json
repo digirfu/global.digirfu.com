@@ -1,0 +1,6 @@
+{
+  "name": "Halden — AI Teammate for Port Operators",
+  "description": "Halden B2B SaaS landing hero featuring Hal, an AI teammate for port operators, with interactive bowl-glow scroll effect and letter-by-letter reveal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

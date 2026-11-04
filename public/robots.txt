@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Crawl-delay is intentionally omitted: the site is fully static.
+Sitemap: https://global.digirfu.com/sitemap.xml
