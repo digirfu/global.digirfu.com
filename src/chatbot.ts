@@ -347,18 +347,52 @@ export function initChatbot(): void {
 
   if (!root || !panel || !fab || !closeBtn || !log || !chips || !form || !input) return;
 
-  // Track how much of the viewport the on-screen keyboard covers, so the
-  // mobile stylesheet can lift the panel above it.
-  const viewport = window.visualViewport;
-  if (viewport) {
-    const syncKeyboard = (): void => {
-      const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      root.style.setProperty('--dgi-kb', `${Math.round(covered)}px`);
-    };
-    viewport.addEventListener('resize', syncKeyboard);
-    viewport.addEventListener('scroll', syncKeyboard);
-    syncKeyboard();
+  // ---- Mobile viewport tracking ------------------------------------------
+  // An on-screen keyboard shrinks visualViewport only: window.innerHeight and
+  // 100vh/100dvh keep their full height, which is why the old layout overflowed.
+  // The mobile stylesheet sizes the panel from --dgi-vh (what is actually
+  // visible) offset by --dgi-vt (how far the visual viewport has been panned),
+  // so header, thread and composer stay inside the usable area on both Android
+  // Chrome and iOS.
+  let syncFrame = 0;
+
+  const syncViewport = (): void => {
+    const vv = window.visualViewport;
+    const visible = vv ? vv.height : window.innerHeight;
+    const panned = vv ? vv.offsetTop : 0;
+    root.style.setProperty('--dgi-vh', `${Math.round(visible)}px`);
+    root.style.setProperty('--dgi-vt', `${Math.round(panned)}px`);
+    // Treat a keyboard as open once it covers a meaningful slice of the screen.
+    root.dataset.kb = window.innerHeight - visible - panned > 80 ? 'true' : 'false';
+  };
+
+  // A keyboard animation emits a burst of resize/scroll events; collapse them
+  // into a single write per frame.
+  const queueSync = (): void => {
+    if (syncFrame) return;
+    syncFrame = window.requestAnimationFrame(() => {
+      syncFrame = 0;
+      syncViewport();
+    });
+  };
+
+  syncViewport();
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', queueSync);
+    window.visualViewport.addEventListener('scroll', queueSync, { passive: true });
   }
+  window.addEventListener('orientationchange', queueSync);
+
+  // Some Android keyboards only settle a few hundred milliseconds after focus,
+  // so re-measure while the keyboard animates in or out.
+  const trackKeyboard = (): void => {
+    syncViewport();
+    [80, 200, 380].forEach((delay) => window.setTimeout(syncViewport, delay));
+  };
+
+  input.addEventListener('focus', trackKeyboard);
+  input.addEventListener('blur', trackKeyboard);
 
   let greeted = false;
   let typingTimer = 0;
@@ -428,6 +462,9 @@ export function initChatbot(): void {
     root.dataset.open = 'true';
     fab.setAttribute('aria-expanded', 'true');
     fab.setAttribute('aria-label', 'Close Digirfu AI assistant');
+    // Re-measure on open: browser toolbars may have changed the visible area
+    // since the panel was last shown.
+    syncViewport();
     if (!greeted) {
       greeted = true;
       appendMessage('bot', WELCOME);

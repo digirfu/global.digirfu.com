@@ -1749,20 +1749,71 @@ a.contact-row:hover .contact-v {
     row-gap: 8px;
   }
 
-  /* Floating assistant: full-width sheet, lifted above the keyboard */
+  /* Floating assistant on phones: a sheet that fills the visible viewport.
+     --dgi-vh/--dgi-vt mirror visualViewport (written by chatbot.ts), because
+     neither 100vh nor 100dvh shrinks when an Android Chrome or iOS keyboard
+     opens; 100dvh is only the fallback before the widget script runs. Sizing
+     from the visible area is what keeps the header, thread and composer on
+     screen instead of letting the keyboard push them out. */
   .dgi-chat-panel {
     position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: calc(88px + var(--dgi-kb, 0px));
+    top: calc(var(--dgi-vt, 0px) + 8px);
+    right: 8px;
+    bottom: auto;
+    left: 8px;
     width: auto;
-    max-height: calc(100vh - 168px - var(--dgi-kb, 0px));
+    height: calc(var(--dgi-vh, 100dvh) - 16px);
+    max-height: none;
+    margin: 0;
     border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    overscroll-behavior: contain;
   }
 
+  /* Header, suggestions and composer keep their intrinsic height: only the
+     thread below is allowed to shrink, so the input and send button can never
+     be squeezed out by a short visible area. */
+  .dgi-chat-head,
+  .dgi-chat-chips,
+  .dgi-chat-form,
+  .dgi-chat-foot {
+    flex: 0 0 auto;
+  }
+
+  /* The thread scrolls on its own. min-height:0 overrides the base rule's
+     180px floor, which would otherwise overflow the sheet once the keyboard
+     takes most of the screen. */
   .dgi-chat-log {
+    flex: 1 1 auto;
     min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 14px 12px 6px;
+  }
+
+  /* The sheet covers the launcher, so fade it out while the chat is open.
+     It sits later in the DOM, which would otherwise paint it over the send
+     button. */
+  .dgi-chat-fab {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
+  }
+
+  .dgi-chat[data-open='true'] .dgi-chat-fab {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92);
+  }
+
+  /* Keyboard open: scroll the suggestion chips rather than let them crowd out
+     the composer when the visible area is short (landscape, split screen). */
+  .dgi-chat[data-kb='true'] .dgi-chat-chips {
+    max-height: 76px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .dgi-bubble {
@@ -1786,7 +1837,12 @@ a.contact-row:hover .contact-v {
 
   .dgi-chat-form { padding: 8px 10px 10px; }
 
-  .dgi-chat-input { font-size: 16px; }
+  /* min-width:0 stops the text field from forcing the row wider than the
+     sheet, which is what produced the horizontal overflow. */
+  .dgi-chat-input {
+    font-size: 16px;
+    min-width: 0;
+  }
 }
 
 /* Compact nav on small phones */
