@@ -29,6 +29,7 @@ export default defineConfig(() => {
           results: path.resolve(__dirname, 'results.html'),
           security: path.resolve(__dirname, 'security.html'),
           discovery: path.resolve(__dirname, 'discovery.html'),
+          terms: path.resolve(__dirname, 'terms.html'),
         },
       },
     },

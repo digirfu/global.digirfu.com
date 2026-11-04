@@ -2018,3 +2018,202 @@ a.contact-row:hover .contact-v {
     pointer-events: none;
   }
 }
+
+/* ==========================================================================
+   Terms & conditions consent gate.
+   Built by /src/consent.ts, which appends it as the last child of <body>, so the
+   .dgi-chat + .dgi-menu sibling rule above keeps working. The dialog only exists
+   in the DOM while it is open or animating out.
+   ========================================================================== */
+.dgi-terms {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(11, 29, 58, 0.42);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.28s var(--ease),
+    visibility 0.28s var(--ease);
+}
+
+.dgi-terms[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dgi-terms-card {
+  position: relative;
+  width: min(500px, 100%);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 30px 28px 24px;
+  border-radius: 22px;
+  border: 1px solid rgba(11, 29, 58, 0.08);
+  background: #ffffff;
+  box-shadow: 0 40px 90px -46px rgba(11, 29, 58, 0.75);
+  transform: translateY(14px) scale(0.985);
+  transition: transform 0.28s var(--ease);
+}
+
+.dgi-terms[data-open='true'] .dgi-terms-card {
+  transform: none;
+}
+
+.dgi-terms-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(11, 29, 58, 0.08);
+  background: rgba(11, 29, 58, 0.03);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(11, 29, 58, 0.55);
+}
+
+.dgi-terms-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--dot);
+  box-shadow: 0 0 8px var(--dot-shadow);
+}
+
+.dgi-terms-title {
+  margin-top: 16px;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.dgi-terms-copy {
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.dgi-terms-list {
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+  list-style: none;
+}
+
+.dgi-terms-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(11, 29, 58, 0.62);
+}
+
+.dgi-terms-list li::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 114, 255, 0.45);
+}
+
+.dgi-terms-actions {
+  margin-top: 22px;
+}
+
+.dgi-terms-accept {
+  width: 100%;
+  height: 46px;
+  justify-content: center;
+  padding: 0 46px;
+}
+
+.dgi-terms-meta {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+}
+
+.dgi-terms-read {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(22, 101, 216, 0.35);
+}
+
+.dgi-terms-read:hover {
+  text-decoration-color: currentColor;
+}
+
+.dgi-terms-later {
+  padding: 6px 2px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(11, 29, 58, 0.5);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.dgi-terms-later:hover {
+  color: var(--ink);
+}
+
+.dgi-terms-accept:focus-visible,
+.dgi-terms-read:focus-visible,
+.dgi-terms-later:focus-visible {
+  outline: 3px solid rgba(0, 114, 255, 0.35);
+  outline-offset: 3px;
+}
+
+/* The page underneath stays where it was while the gate is up */
+body.dgi-terms-lock {
+  overflow: hidden;
+}
+
+@media (max-width: 520px) {
+  .dgi-terms {
+    align-items: flex-end;
+    padding: 14px;
+  }
+
+  .dgi-terms-card {
+    max-height: calc(100dvh - 28px);
+    padding: 24px 20px 18px;
+    border-radius: 20px;
+  }
+
+  .dgi-terms-title {
+    font-size: 21px;
+  }
+
+  .dgi-terms-copy {
+    font-size: 14px;
+  }
+
+  .dgi-terms-list li {
+    font-size: 13px;
+  }
+}

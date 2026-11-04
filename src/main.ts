@@ -9,6 +9,7 @@ import {
 } from './utils/glow-math';
 import { initChatbot } from './chatbot';
 import { initPageMenu } from './menu';
+import { initConsentGate } from './consent';
 
 interface CharItem {
   span: HTMLElement;
@@ -446,3 +447,8 @@ initChatbot();
 // Page menu (mobile & tablet only)
 // ========================================================
 initPageMenu();
+
+// ========================================================
+// Terms & conditions consent gate (first visit only)
+// ========================================================
+initConsentGate();
