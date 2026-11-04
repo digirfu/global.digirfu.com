@@ -1125,7 +1125,7 @@ a.contact-row:hover .contact-v {
   color: rgba(11, 29, 58, 0.5);
 }
 
-/* Certification strip under the footer brand */
+/* Certification badge under the footer brand */
 .cert-line {
   margin-top: 16px;
   display: flex;
@@ -1133,25 +1133,13 @@ a.contact-row:hover .contact-v {
   gap: 8px;
 }
 
-.cert-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid rgba(11, 29, 58, 0.12);
-  background: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(11, 29, 58, 0.62);
-  white-space: nowrap;
-}
-
-.cert-chip svg {
-  color: var(--accent-lime);
-  flex-shrink: 0;
+/* The badge artwork ships on a white plate and the footer is white too, so it
+   sits flush: no border, no padding, no chip around it. The width/height
+   attributes on the tag only encode the 857x293 ratio for space reservation. */
+.cert-badge {
+  display: block;
+  width: 170px;
+  height: auto;
 }
     /* Floating AI Assistant */
 .dgi-chat {
