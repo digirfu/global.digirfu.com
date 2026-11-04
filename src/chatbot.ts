@@ -347,40 +347,25 @@ export function initChatbot(): void {
 
   if (!root || !panel || !fab || !closeBtn || !log || !chips || !form || !input) return;
 
+  // Track how much of the viewport the on-screen keyboard covers, so the
+  // mobile stylesheet can lift the panel above it.
+  const viewport = window.visualViewport;
+  if (viewport) {
+    const syncKeyboard = (): void => {
+      const covered = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      root.style.setProperty('--dgi-kb', `${Math.round(covered)}px`);
+    };
+    viewport.addEventListener('resize', syncKeyboard);
+    viewport.addEventListener('scroll', syncKeyboard);
+    syncKeyboard();
+  }
+
   let greeted = false;
   let typingTimer = 0;
 
   const scrollToLatest = () => {
     log.scrollTop = log.scrollHeight;
   };
-
-  // Track the on-screen keyboard. --dgi-kb is how much of the layout viewport
-  // the keyboard covers, --dgi-vp is the height still visible and --dgi-vt the
-  // visible top edge (iOS scrolls the layout viewport when the keyboard opens).
-  // Mobile CSS turns those three into a sheet that fills the visible area
-  // exactly once, so the panel never gets lifted and capped by the same pixels.
-  const viewport = window.visualViewport;
-  if (viewport) {
-    let kbWasOpen = false;
-    const syncKeyboard = (): void => {
-      const covered = Math.max(0, Math.round(window.innerHeight - viewport.height - viewport.offsetTop));
-      const isOpen = covered > 80;
-      root.style.setProperty('--dgi-kb', `${covered}px`);
-      root.style.setProperty('--dgi-vp', `${Math.round(viewport.height)}px`);
-      root.style.setProperty('--dgi-vt', `${Math.round(viewport.offsetTop)}px`);
-      root.dataset.kb = isOpen ? 'true' : 'false';
-      // Repositioning is silent, but a freshly opened keyboard should reveal
-      // the newest message rather than the middle of the thread.
-      if (isOpen && !kbWasOpen) scrollToLatest();
-      kbWasOpen = isOpen;
-    };
-    viewport.addEventListener('resize', syncKeyboard, { passive: true });
-    viewport.addEventListener('scroll', syncKeyboard, { passive: true });
-    window.addEventListener('orientationchange', syncKeyboard);
-    input.addEventListener('focus', syncKeyboard);
-    input.addEventListener('blur', syncKeyboard);
-    syncKeyboard();
-  }
 
   const appendMessage = (role: 'bot' | 'user', text: string): HTMLElement => {
     const row = document.createElement('div');
