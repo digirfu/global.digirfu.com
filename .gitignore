@@ -9,3 +9,7 @@ coverage/
 
 # AI Studio scratch captures (temporary media storage)
 .aistudio/
+
+# Local Vercel CLI scratch files
+.vercel-tmp/
+.vercel/
