@@ -1255,6 +1255,15 @@ a.contact-row:hover .contact-v {
   display: none;
 }
 
+/* On-screen keyboard is up. --dgi-kb is the slice of the layout viewport the
+   keyboard covers and --dgi-vp is what is still visible (both set from
+   visualViewport in chatbot.ts). Lift by the keyboard once and cap the height
+   to the pixels actually left, so the panel stops collapsing to a sliver. */
+.dgi-chat[data-kb='true'] .dgi-chat-panel {
+  bottom: calc(var(--dgi-kb, 0px) + 12px);
+  max-height: calc(var(--dgi-vp, 100vh) - 24px);
+}
+
 @keyframes dgi-pop {
   from { opacity: 0; transform: translateY(10px) scale(0.97); }
   to { opacity: 1; transform: none; }
@@ -1749,14 +1758,16 @@ a.contact-row:hover .contact-v {
     row-gap: 8px;
   }
 
-  /* Floating assistant: full-width sheet, lifted above the keyboard */
+  /* Floating assistant: full-width sheet above the button, or above the
+     keyboard once --dgi-vp/--dgi-kb take over (see .dgi-chat[data-kb]). */
   .dgi-chat-panel {
     position: fixed;
     left: 12px;
     right: 12px;
-    bottom: calc(88px + var(--dgi-kb, 0px));
+    bottom: 88px;
     width: auto;
-    max-height: calc(100vh - 168px - var(--dgi-kb, 0px));
+    max-height: calc(100vh - 120px);
+    max-height: calc(100dvh - 120px);
     border-radius: 18px;
   }
 
