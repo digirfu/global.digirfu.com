@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sub-page layer (Services / Capabilities / Results / Security / Discovery)
+   Sub-page layer (Services / Capabilities / Works / Results / Security / Discovery)
    Loaded after site.css. Reuses its tokens and components; this file only
    adds the patterns that deliberately differ from the home page.
    ========================================================================== */
@@ -341,6 +341,112 @@
   color: var(--accent-blue);
 }
 
+/* Client work index: same card language as .cap-card, but every card ends on
+   an outcome line and a stack so the grid reads as a portfolio rather than a
+   feature list. Cards stretch to equal height and the outcome sits on a shared
+   baseline via margin-top: auto. */
+.work-grid {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.work-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(11, 29, 58, 0.08);
+  border-radius: 16px;
+  padding: 24px 22px;
+  box-shadow: 0 12px 30px -24px rgba(11, 29, 58, 0.5);
+  transition:
+    border-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.work-card:hover {
+  border-color: rgba(0, 212, 255, 0.42);
+  transform: translateY(-2px);
+}
+
+.work-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(11, 29, 58, 0.45);
+}
+
+.work-card h3 {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.work-card p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.work-outcome {
+  margin-top: 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.work-stack {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.work-stack span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(11, 29, 58, 0.08);
+  background: rgba(11, 29, 58, 0.04);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(11, 29, 58, 0.6);
+}
+
+/* Pinned to the bottom of the card so the links line up across a row */
+.work-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 18px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  transition: color 0.25s var(--ease);
+}
+
+.work-link svg {
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease);
+}
+
+.work-link:hover {
+  color: var(--accent-blue);
+}
+
+.work-link:hover svg {
+  transform: translateX(3px);
+}
+
 /* Closing band before the footer */
 .cta-band {
   position: relative;
@@ -406,6 +512,10 @@
   .spec-row {
     grid-template-columns: 140px minmax(0, 1fr);
   }
+
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 960px) {
@@ -457,6 +567,11 @@
     grid-template-columns: 1fr;
     gap: 6px;
     padding: 15px 0;
+  }
+
+  .work-grid {
+    grid-template-columns: 1fr;
+    margin-top: 32px;
   }
 
   .page-actions .btn {

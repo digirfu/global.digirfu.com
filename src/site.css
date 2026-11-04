@@ -1487,14 +1487,24 @@ a.contact-row:hover .contact-v {
 /* ========================================================
    Responsive refinement: tablet & mobile.
    Every rule below lives inside a max-width query, so the
-   desktop layout (>= 1101px) is left untouched.
+   desktop layout (>= 1201px) is left untouched.
    ======================================================== */
+
+/* Six links in the centred row: trim the gap before the row can reach the CTA */
+@media (max-width: 1200px) {
+  .nav .links { gap: 14px; }
+}
 
 /* Small laptops & tablet landscape */
 @media (max-width: 1100px) {
   .nav .links { gap: 20px; }
 
   .nav .links a { font-size: 13px; }
+
+  /* The pill nav runs out of room for a sixth link here. Client Portal points
+     at the same page as the Start a project CTA, so it is the safe element to
+     drop — every destination stays reachable. */
+  .login-btn { display: none; }
 
   .sec-pad {
     padding-top: 120px;

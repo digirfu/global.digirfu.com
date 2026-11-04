@@ -25,6 +25,7 @@ export default defineConfig(() => {
           main: path.resolve(__dirname, 'index.html'),
           services: path.resolve(__dirname, 'services.html'),
           capabilities: path.resolve(__dirname, 'capabilities.html'),
+          works: path.resolve(__dirname, 'works.html'),
           results: path.resolve(__dirname, 'results.html'),
           security: path.resolve(__dirname, 'security.html'),
           discovery: path.resolve(__dirname, 'discovery.html'),
